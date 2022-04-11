@@ -62,3 +62,5 @@ docker ps
 docker exec -it 09f981aea231 python manage.py createsuperuser
 ```
 теперь все команды можно так запускать ) шутка пре перезапуске база стерётся
+
+https://uwsgi-docs.readthedocs.io/en/latest/Nginx.html#what-is-the-uwsgi-params-file

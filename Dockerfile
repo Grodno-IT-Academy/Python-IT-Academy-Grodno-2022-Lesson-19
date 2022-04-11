@@ -1,23 +1,29 @@
-FROM python:3.10.4
+FROM python:3.10-alpine
+
+ENV PATH="/scripts:${PATH}"
+
+COPY requirements.txt /requirements.txt
+
+RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
+RUN pip install -r /requirements.txt
+RUN apk del .tmp
+
+RUN mkdir app
+COPY ./demo /app
 
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+COPY ./scripts /scripts
+RUN chmod +x /scripts/*
 
-RUN pip install -r requirements.txt
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
 
-COPY . .
+RUN adduser -D user
+RUN chown -R user:user /vol
+RUN chown -R user:user /app/db.sqlite3
+RUN chmod -R 755 /vol/web
 
-EXPOSE 8000
+USER user
 
-RUN ["python", "manage.py", "migrate"]
-
-ENTRYPOINT ["python", "demo/manage.py"]
-CMD ["runserver", "0:8000"]
-#to start
-#docker build -t demo_django .
-#docker run -it -p 8000:8000 -d demo_django
-#other commands
-#docker ps -a
-#docker stop demo_django
-
+CMD ["entrypoint.sh"]
