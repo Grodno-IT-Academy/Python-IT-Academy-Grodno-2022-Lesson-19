@@ -6,13 +6,13 @@ COPY requirements.txt /app/requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY ./demo .
 
 EXPOSE 8000
 
 RUN ["python", "manage.py", "migrate"]
 
-ENTRYPOINT ["python", "demo/manage.py"]
+ENTRYPOINT ["python", "manage.py"]
 CMD ["runserver", "0:8000"]
 #to start
 #docker build -t demo_django .
